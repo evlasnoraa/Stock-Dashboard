@@ -6,3 +6,4 @@ pytz
 ta
 matplotlib
 statsmodels
+curl_cffi
