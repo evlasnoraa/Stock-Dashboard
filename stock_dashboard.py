@@ -141,7 +141,7 @@ def stats(ticker):
     current_price = ticker_info.get("regularMarketPrice") or df['Close'].iloc[-1]
     eps = ticker_info.get('trailingEps')
     p_e = ticker_info.get('trailingPE')
-    sector = ticker_info.get('sector', 'N/A')
+    sector = ticker_info.get('sector')
     shortName = ticker_info.get('shortName', ticker)
     # Next, we calculate the change in price over the following intervals
     today = date.today()
