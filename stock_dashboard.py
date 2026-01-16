@@ -301,14 +301,14 @@ if st.session_state.submitted:
         st.markdown(f"""
             <div style="padding:15px; border-radius:10px;">
                 <p>Name</p>
-                <h3 style="margin:0;">{st.session_state.name}</h3>
+                <h2 style="margin:0;">{st.session_state.name}</h2>
             </div>
         """, unsafe_allow_html=True)
     with c2:
         st.markdown(f"""
             <div style="padding:15px; border-radius:10px;">
                 <p>Recommendation</p>
-                <h3 style="color:{st.session_state.rec_color}; margin:0;">{st.session_state.recommendation}</h3>
+                <h2 style="color:{st.session_state.rec_color}; margin:0;">{st.session_state.recommendation}</h2>
             </div>
         """, unsafe_allow_html=True)
     # Dashboard 1 Container
