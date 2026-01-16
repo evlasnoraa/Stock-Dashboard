@@ -10,14 +10,26 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 import re
 import time
+import requests
+
 
 #####################################
 # Important functions to fetch data #
 #####################################
 
+# Create a global session to reuse across functions
+def get_session():
+    session = requests.Session()
+    session.headers.update({
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    })
+    return session
+
+session = get_session()
+
 # This function calculate the values used in the dynamic portion of the website that updates with changing period/interval
 def dynamic_stock_data(ticker, period, interval):
-    company_data = yf.download(tickers = ticker, period = period, interval = interval)
+    company_data = yf.download(tickers = ticker, period = period, interval = interval, session=session)
     # Strip to only one ticker's data
     company_data = company_data.xs(ticker, axis=1, level=1)
     company_data.reset_index(inplace=True)
@@ -59,7 +71,7 @@ def plotly_graph(df_in, ticker, period, change):
     return fig
 
 def forecast_plot(ticker):
-    df = yf.download(ticker, period='3y', interval='1d')
+    df = yf.download(ticker, period='3y', interval='1d', session=session)
     df = df.xs(ticker, axis=1, level=1)
     # Prepare the data
     df.reset_index(inplace=True)
@@ -111,12 +123,25 @@ def stats(ticker):
     ts = df[['Date', 'Close']].copy()
     ts.set_index('Date', inplace=True)
     # First, we get the live price and the latest EPS and P/E ratio
-    Ticker = yf.Ticker(ticker).info
-    current_price = Ticker.get("regularMarketPrice")
-    eps = Ticker.get('trailingEps')
-    p_e = Ticker.get('trailingPE')
-    sector = Ticker.get('sector')
-    shortName = Ticker.get('shortName')
+    
+    # 1. Use download for the historical data (less likely to rate limit)
+    df = yf.download(ticker, period='1y', interval='1d', session=session)
+    df = df.xs(ticker, axis=1, level=1)
+    df.reset_index(inplace=True)
+    
+    # 2. Use Ticker with session for the .info call
+    ticker_obj = yf.Ticker(ticker, session=session)
+    try:
+        ticker_info = ticker_obj.info
+    except Exception:
+        # Fallback if .info fails
+        ticker_info = {}
+
+    current_price = ticker_info.get("regularMarketPrice") or df['Close'].iloc[-1]
+    eps = ticker_info.get('trailingEps')
+    p_e = ticker_info.get('trailingPE')
+    sector = ticker_info.get('sector', 'N/A')
+    shortName = ticker_info.get('shortName', ticker)
     # Next, we calculate the change in price over the following intervals
     today = date.today()
     results = {}
