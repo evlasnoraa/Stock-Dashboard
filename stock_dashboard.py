@@ -296,7 +296,14 @@ if st.session_state.submitted:
     st.write(" ")
     st.divider()
     c1, c2 = st.columns([5, 5])
-    c1.metric("Name", f"{st.session_state.name}")
+    # c1.metric("Name", f"{st.session_state.name}")
+    with c1:
+        st.markdown(f"""
+            <div style="padding:15px; border-radius:10px;">
+                <p>Name</p>
+                <h3 style="margin:0;">{st.session_state.name}</h3>
+            </div>
+        """, unsafe_allow_html=True)
     with c2:
         st.markdown(f"""
             <div style="padding:15px; border-radius:10px;">
