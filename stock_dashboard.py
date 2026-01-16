@@ -261,7 +261,7 @@ if 'rec_color' not in st.session_state:
 # Sidebar 
 option = st.sidebar.selectbox('Stock Options', ['Apple(AAPL)', 'Tesla(TSLA)', 'Nvidia(NVDA)', 'GameStop(GME)', 'American Airlines Group(AAL)', 'Something Else'])
 if option == 'Something Else':
-    temp_ticker = st.sidebar.text_input('Please make sure your enter company code!')
+    temp_ticker = st.sidebar.text_input('Please make sure you enter company code that matches with Yahoo Finance!')
 else:
     temp_ticker = re.findall(r"\((.*?)\)", option)[0]
 
@@ -332,6 +332,20 @@ if st.session_state.submitted:
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("Please select a time period to view the Stock Dashboard.")
+
+else:
+    # This is what users see BEFORE they hit submit
+    st.container()
+    st.markdown("## 👋 Welcome to the Real-Time Stock Dashboard")
+    st.info("👈 **To get started, please open the sidebar on the left and select a company.**")
+    
+    # You can even add a nice instructional visual here
+    st.write("---")
+    st.subheader("Features available after selection:")
+    col1, col2, col3 = st.columns(3)
+    col1.markdown("📈 **Live Price Tracking**")
+    col2.markdown("🤖 **AI Forecasts**")
+    col3.markdown("🎯 **Buy/Sell Signals**")
 
     # Dashboard 2 (Static after submit)
     st.write("###")
