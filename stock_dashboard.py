@@ -11,18 +11,18 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 import re
 import time
 import requests
-
+from curl_cffi import requests as requests_cffi
 
 #####################################
 # Important functions to fetch data #
 #####################################
 
 # Create a global session to reuse across functions
+
 def get_session():
-    session = requests.Session()
-    session.headers.update({
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    })
+    # This 'impersonate' flag is the secret sauce. 
+    # It mimics a real Chrome browser's TLS fingerprint.
+    session = requests_cffi.Session(impersonate="chrome")
     return session
 
 session = get_session()
