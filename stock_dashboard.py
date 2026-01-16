@@ -345,8 +345,8 @@ if st.session_state.submitted:
 else:
     # This is what users see BEFORE they hit submit
     st.container()
-    st.markdown("## 👋 Welcome to the Real-Time Stock Dashboard")
-    st.info("👈 **To get started, please open the sidebar on the left and select a company.**")
+    st.markdown("## Welcome to the Real-Time Stock Dashboard!")
+    st.info("⬅️ **To get started, please open the sidebar on the left and select a company.**")
     
 
     
