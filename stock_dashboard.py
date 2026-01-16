@@ -332,21 +332,6 @@ if st.session_state.submitted:
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("Please select a time period to view the Stock Dashboard.")
-
-else:
-    # This is what users see BEFORE they hit submit
-    st.container()
-    st.markdown("## 👋 Welcome to the Real-Time Stock Dashboard")
-    st.info("👈 **To get started, please open the sidebar on the left and select a company.**")
-    
-    # You can even add a nice instructional visual here
-    st.write("---")
-    st.subheader("Features available after selection:")
-    col1, col2, col3 = st.columns(3)
-    col1.markdown("📈 **Live Price Tracking**")
-    col2.markdown("🤖 **AI Forecasts**")
-    col3.markdown("🎯 **Buy/Sell Signals**")
-
     # Dashboard 2 (Static after submit)
     st.write("###")
     st.markdown("### **Summary Stats**")
@@ -356,6 +341,15 @@ else:
     st.markdown("### **Forecast**")
     st.write("")
     st.plotly_chart(st.session_state.forecast)
+    
+else:
+    # This is what users see BEFORE they hit submit
+    st.container()
+    st.markdown("## 👋 Welcome to the Real-Time Stock Dashboard")
+    st.info("👈 **To get started, please open the sidebar on the left and select a company.**")
+    
+
+    
     
     
 
