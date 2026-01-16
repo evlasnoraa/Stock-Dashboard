@@ -79,13 +79,14 @@ def forecast_plot(ticker):
     ts.set_index('Date', inplace=True)
     # Set business-day frequency and forward fill missing values
     ts = ts.asfreq('B')
-    ts['Close'] = ts['Close'].fillna(method='ffill')
+    ts['Close'] = ts['Close'].ffill()
     # Fit Holt-Winters model on entire 3 years
     model = ExponentialSmoothing(
         ts['Close'],
         trend='add',
         seasonal='add',
-        seasonal_periods=252
+        seasonal_periods=252,
+        initialization_method="estimated"
     ).fit()
     # Forecast next 30 trading days
     forecast_steps = 30
@@ -257,7 +258,7 @@ if st.sidebar.button("Submit"):
 if st.session_state.submitted:
     st.write(" ")
     st.divider()
-    c1, c2 = st.columns([5, 5], vertical_alignment = 'center')
+    c1, c2 = st.columns([5, 5])
     c1.metric("Name", f"{st.session_state.name}")
     c2.metric("Sector", f"{st.session_state.sector}")
     # Dashboard 1 Container
