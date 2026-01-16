@@ -299,9 +299,9 @@ if st.session_state.submitted:
     c1.metric("Name", f"{st.session_state.name}")
     with c2:
         st.markdown(f"""
-            <div style="background-color:{st.session_state.rec_color}; padding:15px; border-radius:10px; text-align:center;">
-                <p style="color:white; margin:0; font-size:12px; font-weight:bold;">SIGNAL</p>
-                <h3 style="color:white; margin:0;">{st.session_state.recommendation}</h3>
+            <div style="padding:15px; border-radius:10px;">
+                <p style="color:whtie; margin:0; font-size:12px; font-weight:bold;">Recommendation</p>
+                <h3 style="color:{st.session_state.rec_color}; margin:0;">{st.session_state.recommendation}</h3>
             </div>
         """, unsafe_allow_html=True)
     # Dashboard 1 Container
