@@ -1,0 +1,8 @@
+streamlit==1.30.0
+plotly
+pandas
+yfinance
+pytz
+ta
+matplotlib
+statsmodels
