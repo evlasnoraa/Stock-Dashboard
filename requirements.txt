@@ -7,3 +7,4 @@ ta
 matplotlib
 statsmodels
 curl_cffi
+pandas_ta
