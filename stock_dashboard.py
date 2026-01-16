@@ -12,6 +12,7 @@ import re
 import time
 import requests
 from curl_cffi import requests as requests_cffi
+import pandas_ta as ta # Ensure this is in your imports
 
 #####################################
 # Important functions to fetch data #
@@ -165,7 +166,7 @@ def stats(ticker):
             results[label] = None
     results['EPS'] = eps
     results['P/E Ratio'] = p_e
-    return results, sector, shortName
+    return results, sector, shortName, df
 
 def custom_metric(results):
     boxes_html = '''<div style="display: flex; flex-wrap: nowrap; gap: 15px; 
@@ -197,6 +198,35 @@ def custom_metric(results):
     boxes_html += '</div>'
     st.markdown(boxes_html, unsafe_allow_html=True)
 
+def get_recommendation(df):
+    # Ensure we have enough data (at least 50 days for SMA_50)
+    if len(df) < 50:
+        return "Not Enough Data", "gray"
+
+    # 1. Calculate RSI (pandas_ta adds this as a new column)
+    # The 'length' parameter is standard for RSI
+    df['RSI'] = df.ta.rsi(length=14)
+    
+    # 2. Calculate Moving Averages
+    df['SMA_20'] = df.ta.sma(length=20)
+    df['SMA_50'] = df.ta.sma(length=50)
+    
+    # Get the most recent values for comparison
+    last_rsi = df['RSI'].iloc[-1]
+    last_sma20 = df['SMA_20'].iloc[-1]
+    last_sma50 = df['SMA_50'].iloc[-1]
+    
+    # Maintain your specific level of comparisons
+    if last_rsi < 35 and last_sma20 > last_sma50:
+        return "Strong Buy", "green"
+    elif last_rsi < 30:
+        return "Buy", "#90ee90"
+    elif last_rsi > 70:
+        return "Sell", "red"
+    elif last_rsi > 65 and last_sma20 < last_sma50:
+        return "Strong Sell", "darkred"
+    else:
+        return "Hold", "gray"
 
 
 ###########################################
@@ -223,6 +253,10 @@ if 'name' not in st.session_state:
     st.session_state.name = None
 if 'error' not in st.session_state:
     st.session_state.error = False
+if 'recommendation' not in st.session_state:
+    st.session_state.recommendation = "Hold"
+if 'rec_color' not in st.session_state:
+    st.session_state.rec_color = "gray"
 
 # Sidebar 
 option = st.sidebar.selectbox('Stock Options', ['Apple(AAPL)', 'Tesla(TSLA)', 'Nvidia(NVDA)', 'GameStop(GME)', 'American Airlines Group(AAL)', 'Something Else'])
@@ -239,7 +273,10 @@ if st.sidebar.button("Submit"):
         st.session_state.final_ticker = temp_ticker.upper()  # normalize
         # These may raise KeyError or ValueError
         st.session_state.forecast = forecast_plot(temp_ticker)
-        st.session_state.stats, st.session_state.sector, st.session_state.name = stats(temp_ticker)
+        st.session_state.stats, st.session_state.sector, st.session_state.name, full_data = stats(temp_ticker)
+        rec, color = get_recommendation(full_data)
+        st.session_state.recommendation = rec
+        st.session_state.rec_color = color
         st.sidebar.write("For the best experience, shut the sidebar!")
 
 
@@ -251,7 +288,7 @@ if st.sidebar.button("Submit"):
 
     except ValueError:
         st.session_state.submitted = False
-        st.info(f"Not sufficient data for {temp_ticker}. Need company with more than 1 year of data.")
+        st.info(f"Not sufficient data for {temp_ticker}. Need company with more than 1 year of data. If data does exist, try again.")
         st.session_state.error = True
 
 # Display dashboards after submit
@@ -260,7 +297,13 @@ if st.session_state.submitted:
     st.divider()
     c1, c2 = st.columns([5, 5])
     c1.metric("Name", f"{st.session_state.name}")
-    c2.metric("Sector", f"{st.session_state.sector}")
+    with c2:
+    st.markdown(f"""
+        <div style="background-color:{st.session_state.rec_color}; padding:15px; border-radius:10px; text-align:center;">
+            <p style="color:white; margin:0; font-size:12px; font-weight:bold;">SIGNAL</p>
+            <h3 style="color:white; margin:0;">{st.session_state.recommendation}</h3>
+        </div>
+    """, unsafe_allow_html=True)
     # Dashboard 1 Container
     with st.container(border=True):
         # st.markdown("## **_Stock Dashboard_**")
