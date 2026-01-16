@@ -300,7 +300,7 @@ if st.session_state.submitted:
     with c2:
         st.markdown(f"""
             <div style="padding:15px; border-radius:10px;">
-                <p style="color:whtie; margin:0; font-size:12px; font-weight:bold;">Recommendation</p>
+                <p>Recommendation</p>
                 <h3 style="color:{st.session_state.rec_color}; margin:0;">{st.session_state.recommendation}</h3>
             </div>
         """, unsafe_allow_html=True)
