@@ -1,16 +1,20 @@
 # Stock Dashboard Web App
 
-This is a web app that is inspired by popular stock trading apps like **Freetrade**, **Rise by Motilal Oswaal**, and of course, **Yahoo Finance**. In this app, I have created a dynamic dashboard for any company available on Yahoo Finance. The user can choose the time period over which they want to view the dashboard. 
+This is a web app that is inspired by popular stock trading apps like **Freetrade**, **Rise by Motilal Oswaal**, and of course, **Yahoo Finance**. In this app, I have created a dynamic dashboard for any company available on Yahoo Finance. 
 
-Additionally, I have also displayed summary statistics for different time periods that capture the stock performance. Finally, I display a **30-day forecast** using the **Holt-Winters Triple Exponential Smoothing** algorithm. 
+The app gives user the following information:
+- The user can view their chosen stock's performance on a dashboard over different time periods, that they choose
+- A **30-day forecast** using the **Holt-Winters Triple Exponential Smoothing** algorithm, and
+- A **Recommendations** indicator calculated using Relative Strength Index (**RSI**) and Simple Moving Average (**SMA**) for the respective stocks, that recommends whether a user should Buy, Sell or Hold a stock.
 
 ---
 
-The goal of this website was **NOT** to demonstrate my investment knowledge or UI/UX expertise. However, it was to demonstrate how a simple dashboard can be made quite easily within 2–3 days using tools like **Streamlit**. I also took this opportunity to practice my **commenting skills** on the `.py` file. So check it out! :)
+I also took this opportunity to practice my **commenting skills** on the `.py` file. So check it out! :) (Although, that file is not updated with recent changes) 
 
 ---
+You can play around with the app here! - https://stock-dashboard-evlasnoraa.streamlit.app/
 
-## Instructions to Use This App
+Or, you can run it in your own environment using the following steps:
 
 1. Download the `stock_dashboard.py` file  
 2. Make sure you are in the same directory as your `.py` file  
