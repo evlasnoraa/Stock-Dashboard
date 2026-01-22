@@ -261,7 +261,9 @@ if 'rec_color' not in st.session_state:
 # Sidebar 
 option = st.sidebar.selectbox('Stock Options', ['Apple(AAPL)', 'Tesla(TSLA)', 'Nvidia(NVDA)', 'GameStop(GME)', 'American Airlines Group(AAL)', 'Something Else'])
 if option == 'Something Else':
-    temp_ticker = st.sidebar.text_input('Please make sure you enter company code that matches with Yahoo Finance!')
+    user_input = st.sidebar.text_input('Please make sure you enter company code that matches with Yahoo Finance!')
+    if user_input != None:
+        temp_ticker = user_input.upper()
 else:
     temp_ticker = re.findall(r"\((.*?)\)", option)[0]
 
@@ -324,10 +326,10 @@ if st.session_state.submitted:
         if st.session_state.selected_time_period:
             change, per_change, high, low, volume, last_close, company_data = dynamic_stock_data(st.session_state.final_ticker, time_period, interval_mapping[time_period])
             col_1, col_2, col_3, col_4 = st.columns(4)
-            col_1.metric(label=f"{st.session_state.final_ticker} Last Price", value=f"${last_close:.2f}", delta=f"{change:.2f} ({per_change:.2f}%)")
-            col_2.metric("High", f"${high:.2f}")
-            col_3.metric("Low", f"${low:.2f}")
-            col_4.metric("Volume", f"${volume}")
+            col_1.metric(label=f"{st.session_state.final_ticker} Last Price", value=f"{last_close:.2f}", delta=f"{change:.2f} ({per_change:.2f}%)")
+            col_2.metric("High", f"{high:.2f}")
+            col_3.metric("Low", f"{low:.2f}")
+            col_4.metric("Volume", f"{volume}")
             fig = plotly_graph(company_data, st.session_state.final_ticker, time_period, change)
             st.plotly_chart(fig, use_container_width=True)
         else:
